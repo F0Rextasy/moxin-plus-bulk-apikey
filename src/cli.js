@@ -112,7 +112,7 @@ function openTunnel(proxy, host, port) {
 }
 
 /** tiny HTTP(S) JSON client: direct by default, through the pool when one is configured */
-async function req(method, url, { body, headers = {}, exit = null } = {}) {
+async function reqOnce(method, url, { body, headers = {}, exit = null } = {}) {
   const u = new URL(url);
   const payload = body === undefined ? null : Buffer.from(JSON.stringify(body));
   const baseHeaders = {
@@ -158,6 +158,18 @@ async function req(method, url, { body, headers = {}, exit = null } = {}) {
     if (u.protocol === 'https:') { const t = tls.connect({ socket: sock, servername: u.hostname }, () => onSock(t)); t.on('error', reject); }
     else onSock(sock);
   });
+}
+
+/** one dead exit must not kill a run: a failed attempt moves to the next pool exit (3 tries) */
+async function req(method, url, opts = {}) {
+  const tries = pool.length ? 3 : 1;
+  let lastErr;
+  for (let i = 0; i < tries; i++) {
+    const exit = (i === 0 && opts.exit) || nextExit();
+    try { return await reqOnce(method, url, { ...opts, exit }); }
+    catch (e) { lastErr = e; }
+  }
+  throw lastErr;
 }
 async function api(method, p, opts = {}) {
   const r = await req(method, BASE + p, opts);
@@ -308,34 +320,39 @@ async function reviveAll() {
     if (!email || !username || !password || seen.has(email)) continue;
     seen.add(email);
     const exit = nextExit();
-    const li = await loginApi(username, password, exit);
-    if (!li.ok) { log(`revive ${email} login FAIL`, li.li.text.replace(/\s+/g, ' ').slice(0, 80)); results.push({ email, verdict: 'login-failed' }); continue; }
-    const t = li.token;
-    const s0 = await selfApi(t, exit);
-    const q0 = s0.json && s0.json.data && s0.json.data.quota;
-    const ci = await checkinApi(t, exit);
-    const awarded = ci.json && ci.json.data && ci.json.data.quota_awarded;
-    const s1 = await selfApi(t, exit);
-    const q1 = (s1.json && s1.json.data && s1.json.data.quota) ?? q0;
-    log(`revive ${email} quota ${q0} -> ${q1}`, awarded === undefined ? '(check-in already taken / refused)' : `check-in +${awarded}`);
-    let items = await tokenItems(t, exit);
-    if (!items.length) {
-      await api('POST', '/api/token/', { headers: authOf(t), exit, body: { name: 'auto', remain_quota: 0, expired_time: -1, unlimited_quota: true, model_limits_enabled: false, model_limits: '', allow_ips: '', group: 'default' } });
-      items = await tokenItems(t, exit);
+    try {
+      const li = await loginApi(username, password, exit);
+      if (!li.ok) { log(`revive ${email} login FAIL`, li.li.text.replace(/\s+/g, ' ').slice(0, 80)); results.push({ email, verdict: 'login-failed' }); continue; }
+      const t = li.token;
+      const s0 = await selfApi(t, exit);
+      const q0 = s0.json && s0.json.data && s0.json.data.quota;
+      const ci = await checkinApi(t, exit);
+      const awarded = ci.json && ci.json.data && ci.json.data.quota_awarded;
+      const s1 = await selfApi(t, exit);
+      const q1 = (s1.json && s1.json.data && s1.json.data.quota) ?? q0;
+      log(`revive ${email} quota ${q0} -> ${q1}`, awarded === undefined ? '(check-in already taken / refused)' : `check-in +${awarded}`);
+      let items = await tokenItems(t, exit);
+      if (!items.length) {
+        await api('POST', '/api/token/', { headers: authOf(t), exit, body: { name: 'auto', remain_quota: 0, expired_time: -1, unlimited_quota: true, model_limits_enabled: false, model_limits: '', allow_ips: '', group: 'default' } });
+        items = await tokenItems(t, exit);
+      }
+      if (!items.length) { results.push({ email, verdict: 'no-token' }); continue; }
+      const item = items[0];
+      let key = (await currentKey(t, item, exit)) || a.key;
+      if (!key) { results.push({ email, verdict: 'no-key' }); continue; }
+      if (!/^sk-/.test(key)) key = 'sk-' + key;
+      const p = await proveKey(t, item, key);
+      if (p.sanity.live) {
+        live++;
+        appendKeyUnique(key);
+        fs.appendFileSync(ACCOUNTS, JSON.stringify({ ts: new Date().toISOString(), email, user: username, pass: password, key, quotaBefore: q0, quotaAwarded: awarded ?? null, quota: q1, model: MODEL, group: p.group, revive: true, sanity: '2/2', exit: proxyLabel(exit) }) + '\n');
+      }
+      log(`revive ${email}`, p.sanity.live ? 'LIVE 2/2' : 'NOT LIVE', 'group', p.group);
+      results.push({ email, verdict: p.sanity.live ? 'live' : 'no-chat', quotaBefore: q0, quotaAwarded: awarded ?? null, quota: q1, group: p.group, key: String(key).slice(0, 12) + '…', groupChanges: p.groupChanges });
+    } catch (e) {
+      log(`revive ${email} ERROR`, String(e.message).slice(0, 60));
+      results.push({ email, verdict: 'error', text: String(e.message).slice(0, 120) });
     }
-    if (!items.length) { results.push({ email, verdict: 'no-token' }); continue; }
-    const item = items[0];
-    let key = (await currentKey(t, item, exit)) || a.key;
-    if (!key) { results.push({ email, verdict: 'no-key' }); continue; }
-    if (!/^sk-/.test(key)) key = 'sk-' + key;
-    const p = await proveKey(t, item, key);
-    if (p.sanity.live) {
-      live++;
-      appendKeyUnique(key);
-      fs.appendFileSync(ACCOUNTS, JSON.stringify({ ts: new Date().toISOString(), email, user: username, pass: password, key, quotaBefore: q0, quotaAwarded: awarded ?? null, quota: q1, model: MODEL, group: p.group, revive: true, sanity: '2/2', exit: proxyLabel(exit) }) + '\n');
-    }
-    log(`revive ${email}`, p.sanity.live ? 'LIVE 2/2' : 'NOT LIVE', 'group', p.group);
-    results.push({ email, verdict: p.sanity.live ? 'live' : 'no-chat', quotaBefore: q0, quotaAwarded: awarded ?? null, quota: q1, group: p.group, key: String(key).slice(0, 12) + '…', groupChanges: p.groupChanges });
   }
   const report = { at: new Date().toISOString(), host: BASE, model: MODEL, live, total: seen.size, results };
   fs.writeFileSync(path.join(HERE, 'revive-report.json'), JSON.stringify(report, null, 1));
@@ -421,7 +438,9 @@ async function verifyKeys() {
   let live = 0;
   for (const key of keys) {
     const exit = nextExit();
-    const s = await sanity2(key, exit);
+    let s;
+    try { s = await sanity2(key, exit); }
+    catch (e) { s = { live: false, model: null, prompts: [{ prompt: 'ERR', status: 0, content: null, err: String(e.message).slice(0, 60) }] }; }
     if (s.live) live++;
     report.push({ key: String(key).slice(0, 12) + '…', live: s.live, model: s.model || null, prompts: s.prompts.map((x) => ({ prompt: x.prompt, status: x.status, out: String(x.content || x.err || '').slice(0, 40) })) });
     log(`verify ${key.slice(0, 12)}… ${s.live ? 'LIVE 2/2' : 'DEAD'} ${s.prompts.map((x) => `${x.prompt}=${x.status}:${String(x.content || x.err || '').slice(0, 20)}`).join(' | ')}`);
