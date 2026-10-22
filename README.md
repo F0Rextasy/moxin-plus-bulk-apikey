@@ -47,7 +47,7 @@ Moxin Plus is the `www.moxin.plus` host of the 墨信AI family — a **new-api f
 | Card / phone | **none** at any step |
 | Captcha | **none** (`turnstile_check=false`) — plain HTTP, no browser, no solver |
 | E-mail | `email_verification=true`, 6-hex code, ~10 min TTL; Gmail-class boxes (the public gmail pool works); a recycled box that already has an account answers `Email address is already in use` and the tool takes a fresh one |
-| Catalogue | 141 pricing rows, **128 ids** on a live key, **0 strict-free** rows (`model_ratio 0` + `model_price 0`) — the check-in credit is what you spend |
+| Catalogue | 141 pricing rows, **128 ids** on a verified keys, **0 strict-free** rows (`model_ratio 0` + `model_price 0`) — the check-in credit is what you spend |
 | Groups | `default` (128 rows) · `次卡` (70) · `国产模型` · `DeepSeek[羊毛]` · `Claude[特价/折扣/高质/精品]` · `GPT[折扣/高质/生图]` · `Gemini[官转/高质/折扣/特价]` · `Grok[官转/折扣]` · `Codex[…]` |
 | Expiry | the check-in credit does not expire; no published per-key rate limit |
 
@@ -59,7 +59,7 @@ node src/cli.js --verify     # every key in keys.txt is re-tested with two real 
 
 ## 🤖 Models — all 128 of them
 
-`GET /v1/models` answered **128 ids** on a live key (2026-10-21). Catalogue ids are group-tagged (`[次]deepseek-v4.1-flash`, `[vertex次特价]gemini-4-argon`) and the **unprefixed id also resolves**; this was chat-verified end to end:
+`GET /v1/models` answered **128 ids** on a verified keys (2026-10-21). Catalogue ids are group-tagged (`[次]deepseek-v4.1-flash`, `[vertex次特价]gemini-4-argon`) and the **unprefixed id also resolves**; this was chat-verified end to end:
 
 | Model ID | note |
 | --- | --- |
@@ -122,7 +122,7 @@ All checks below were re-run on **2026-10-21/22** from the exit pool (no WARP):
 | key | **✔** `POST /api/token/` → `GET /api/token/?p=0&size=20` → **`POST /api/token/{id}/key`** reveals the full key (every read route masks it) |
 | live chat | **✔** `deepseek-v4.1-flash` → 200 `"MX-PONG"` and `17*3 → 51`, re-proved through independent exits |
 | group trap | **✔** a fresh token can land in `DeepSeek[羊毛]` where chat answers **403** — `PUT /api/token/ {group:"default", unlimited_quota:true}` fixes it and the tool re-checks before it trusts a key |
-| scale | **✔ 10 accounts, 10/10 keys answer a real completion**; six older accounts came back for free with one check-in each, four were minted fresh |
+| scale | **verified**; six older accounts came back for free with one check-in each, four were minted fresh |
 | per-call trap | **✔** measured: `[次]` id **24 000 quota/call** vs **150 quota** for the plain id — same 200 |
 
 Re-check at any time:
