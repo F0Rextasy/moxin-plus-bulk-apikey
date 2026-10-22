@@ -18,6 +18,7 @@
 [![License](https://img.shields.io/badge/license-MIT-6ea8fe?style=for-the-badge)](LICENSE)
 [![Models](https://img.shields.io/badge/models-128%20served-412991?style=for-the-badge)](https://www.moxin.plus/pricing)
 [![9Router](https://img.shields.io/badge/9Router-connector-8B5CF6?style=for-the-badge)](#-connect-to-9router)
+[![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
 [🛠 Inicio rápido](#-quick-start) · [🎁 Nivel gratuito](#-free-tier--how-much-you-get) · [🤖 Modelos](#-models--all-128-of-them) · [🧪 Usar la API](#-how-to-use-the-api) · [✅ Verificado](#-verified-working--every-key-is-tested) · [🧭 Cómo funciona](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Opciones](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Problemas](#-issues)
@@ -201,6 +202,17 @@ node src/connect-9router.js \
 
 Ejecútalo sin `--api-key` para registrar **todas** las claves en `keys.txt`. Volver a ejecutarlo es idempotente: el nodo se empareja por `--prefix moxin-plus`, cada conexión por nombre (`moxin-plus-001`, `moxin-plus-002`, …). Predeterminados: `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. Los modelos se sirven entonces como `moxin-plus/<model id>` — fija un id **simple**, no uno `[次]` (ver la trampa anterior).
 
+## 🔌 Conectar con OmniRoute
+
+[OmniRoute](https://omniroute.online) es un router autoalojado y compatible con OpenAI. Moxin Plus sirve un endpoint compatible con OpenAI, así que regístralo una vez y cada clave se convierte en una conexión bajo un único nodo de proveedor:
+
+```bash
+node src/connect-omniroute.js \
+  --base http://localhost:20128 --password 123456 \
+  --api-key YOUR_KEY
+```
+
+Ejecútalo sin `--api-key` para registrar **todas** las claves en `keys.txt`. Volver a ejecutarlo es idempotente: el nodo se empareja por `--prefix moxin-plus`, cada conexión por nombre (`moxin-plus-001`, `moxin-plus-002`, …). Predeterminados: `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. Los modelos se sirven entonces como `moxin-plus/<model id>` — fija un id **simple**, no uno `[次]` (ver la trampa anterior).
 ## 🔑 Qué te da una clave
 
 | | |

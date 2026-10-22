@@ -113,6 +113,11 @@ The launcher asks for the proxy list (optional — without one the CLI runs dire
 
 ## ✅ Verified working — every key is tested
 
+> **Quality gates.** Every key here passed a live `chat-200` before it was written to `keys.txt`
+> (dead keys are never shipped). Router combos follow the same rule at the model level: an entry is
+> added **only if the model answers `chat-200` and can call tools** — a model without tool support,
+> a dead key or a dead provider is dropped instead of added. Works with **9Router and OmniRoute**.
+
 All checks below were re-run on **2026-10-21/22** from the exit pool (no WARP):
 
 | Check | Result |
@@ -200,7 +205,6 @@ node src/connect-9router.js \
 ```
 
 Run it without `--api-key` to register **every** key in `keys.txt`. Re-running is idempotent: the node is matched by `--prefix moxin-plus`, each connection by name (`moxin-plus-001`, `moxin-plus-002`, …). Defaults: `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. Models are then served as `moxin-plus/<model id>` — pin a **plain** id, not a `[次]` one (see the trap above).
-
 
 ## 🔌 Connect to OmniRoute
 

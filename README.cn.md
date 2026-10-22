@@ -18,6 +18,7 @@
 [![License](https://img.shields.io/badge/license-MIT-6ea8fe?style=for-the-badge)](LICENSE)
 [![Models](https://img.shields.io/badge/models-128%20served-412991?style=for-the-badge)](https://www.moxin.plus/pricing)
 [![9Router](https://img.shields.io/badge/9Router-connector-8B5CF6?style=for-the-badge)](#-connect-to-9router)
+[![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
 [🛠 快速开始](#-quick-start) · [🎁 免费额度](#-free-tier--how-much-you-get) · [🤖 模型](#-models--all-128-of-them) · [🧪 使用 API](#-how-to-use-the-api) · [✅ 已验证](#-verified-working--every-key-is-tested) · [🧭 工作原理](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ 选项](#️-cli-options) · [🛰️ 代理](#️-behind-a-proxy) · [🐞 问题反馈](#-issues)
@@ -201,6 +202,17 @@ node src/connect-9router.js \
 
 不带 `--api-key` 运行它会注册 `keys.txt` 中的**每一个**密钥。重复运行是幂等的：节点通过 `--prefix moxin-plus` 匹配，每个连接通过名称匹配（`moxin-plus-001`、`moxin-plus-002`、…）。默认值：`--base http://localhost:20128`、`--password 123456`、`--name "Moxin Plus"`、`--prefix moxin-plus`、`--base-url https://www.moxin.plus/v1`、`--model deepseek-v4.1-flash`。模型随后以 `moxin-plus/<model id>` 的形式提供 — 请固定使用**不带前缀**的 id，而非 `[次]` 的 id（见上文陷阱）。
 
+## 🔌 连接到 OmniRoute
+
+[OmniRoute](https://omniroute.online) 是一个自托管、兼容 OpenAI 的路由器。Moxin Plus 提供兼容 OpenAI 的端点，因此注册一次，每个密钥都会成为一个 provider 节点下的连接：
+
+```bash
+node src/connect-omniroute.js \
+  --base http://localhost:20128 --password 123456 \
+  --api-key YOUR_KEY
+```
+
+不带 `--api-key` 运行它会注册 `keys.txt` 中的**每一个**密钥。重复运行是幂等的：节点通过 `--prefix moxin-plus` 匹配，每个连接通过名称匹配（`moxin-plus-001`、`moxin-plus-002`、…）。默认值：`--base http://localhost:20128`、`--password 123456`、`--name "Moxin Plus"`、`--prefix moxin-plus`、`--base-url https://www.moxin.plus/v1`、`--model deepseek-v4.1-flash`。模型随后以 `moxin-plus/<model id>` 的形式提供 — 请固定使用**不带前缀**的 id，而非 `[次]` 的 id（见上文陷阱）。
 ## 🔑 一个密钥能给你什么
 
 | | |

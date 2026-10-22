@@ -18,6 +18,7 @@
 [![License](https://img.shields.io/badge/license-MIT-6ea8fe?style=for-the-badge)](LICENSE)
 [![Models](https://img.shields.io/badge/models-128%20served-412991?style=for-the-badge)](https://www.moxin.plus/pricing)
 [![9Router](https://img.shields.io/badge/9Router-connector-8B5CF6?style=for-the-badge)](#-connect-to-9router)
+[![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
 [🛠 Быстрый старт](#-quick-start) · [🎁 Бесплатный тариф](#-free-tier--how-much-you-get) · [🤖 Модели](#-models--all-128-of-them) · [🧪 Использование API](#-how-to-use-the-api) · [✅ Проверено](#-verified-working--every-key-is-tested) · [🧭 Как это работает](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Опции](#️-cli-options) · [🛰️ Прокси](#️-behind-a-proxy) · [🐞 Проблемы](#-issues)
@@ -201,6 +202,17 @@ node src/connect-9router.js \
 
 Запустите его без `--api-key`, чтобы зарегистрировать **каждый** ключ из `keys.txt`. Повторный запуск идемпотентен: узел сопоставляется по `--prefix moxin-plus`, каждое соединение — по имени (`moxin-plus-001`, `moxin-plus-002`, …). Значения по умолчанию: `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. Затем модели обслуживаются как `moxin-plus/<model id>` — закрепите **обычный** id, а не `[次]` (см. ловушку выше).
 
+## 🔌 Подключение к OmniRoute
+
+[OmniRoute](https://omniroute.online) — это самостоятельно размещаемый роутер, совместимый с OpenAI. Moxin Plus предоставляет OpenAI-совместимый эндпоинт, поэтому зарегистрируйте его один раз, и каждый ключ станет соединением под одним узлом-провайдером:
+
+```bash
+node src/connect-omniroute.js \
+  --base http://localhost:20128 --password 123456 \
+  --api-key YOUR_KEY
+```
+
+Запустите его без `--api-key`, чтобы зарегистрировать **каждый** ключ из `keys.txt`. Повторный запуск идемпотентен: узел сопоставляется по `--prefix moxin-plus`, каждое соединение — по имени (`moxin-plus-001`, `moxin-plus-002`, …). Значения по умолчанию: `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. Затем модели обслуживаются как `moxin-plus/<model id>` — закрепите **обычный** id, а не `[次]` (см. ловушку выше).
 ## 🔑 Что даёт один ключ
 
 | | |

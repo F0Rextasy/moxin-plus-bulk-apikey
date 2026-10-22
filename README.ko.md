@@ -18,6 +18,7 @@
 [![License](https://img.shields.io/badge/license-MIT-6ea8fe?style=for-the-badge)](LICENSE)
 [![Models](https://img.shields.io/badge/models-128%20served-412991?style=for-the-badge)](https://www.moxin.plus/pricing)
 [![9Router](https://img.shields.io/badge/9Router-connector-8B5CF6?style=for-the-badge)](#-connect-to-9router)
+[![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
 [🛠 빠른 시작](#-quick-start) · [🎁 무료 티어](#-free-tier--how-much-you-get) · [🤖 모델](#-models--all-128-of-them) · [🧪 API 사용하기](#-how-to-use-the-api) · [✅ 검증됨](#-verified-working--every-key-is-tested) · [🧭 작동 방식](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ 옵션](#️-cli-options) · [🛰️ 프록시](#️-behind-a-proxy) · [🐞 이슈](#-issues)
@@ -201,6 +202,17 @@ node src/connect-9router.js \
 
 `--api-key` 없이 실행하면 `keys.txt`의 **모든** 키를 등록합니다. 재실행은 멱등적입니다: 노드는 `--prefix moxin-plus`로 매칭되고, 각 연결은 이름(`moxin-plus-001`, `moxin-plus-002`, …)으로 매칭됩니다. 기본값: `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. 이후 모델은 `moxin-plus/<model id>`로 제공됩니다 — `[次]` id가 아닌 **일반** id를 고정하세요(위의 함정 참조).
 
+## 🔌 OmniRoute에 연결
+
+[OmniRoute](https://omniroute.online)는 자체 호스팅되는 OpenAI 호환 라우터입니다. Moxin Plus는 OpenAI 호환 엔드포인트를 제공하므로, 한 번 등록하면 모든 키가 하나의 프로바이더 노드 아래 연결이 됩니다:
+
+```bash
+node src/connect-omniroute.js \
+  --base http://localhost:20128 --password 123456 \
+  --api-key YOUR_KEY
+```
+
+`--api-key` 없이 실행하면 `keys.txt`의 **모든** 키를 등록합니다. 재실행은 멱등적입니다: 노드는 `--prefix moxin-plus`로 매칭되고, 각 연결은 이름(`moxin-plus-001`, `moxin-plus-002`, …)으로 매칭됩니다. 기본값: `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. 이후 모델은 `moxin-plus/<model id>`로 제공됩니다 — `[次]` id가 아닌 **일반** id를 고정하세요(위의 함정 참조).
 ## 🔑 키 하나로 얻는 것
 
 | | |

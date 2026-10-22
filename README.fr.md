@@ -18,6 +18,7 @@
 [![License](https://img.shields.io/badge/license-MIT-6ea8fe?style=for-the-badge)](LICENSE)
 [![Models](https://img.shields.io/badge/models-128%20served-412991?style=for-the-badge)](https://www.moxin.plus/pricing)
 [![9Router](https://img.shields.io/badge/9Router-connector-8B5CF6?style=for-the-badge)](#-connect-to-9router)
+[![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
 [🛠 Démarrage rapide](#-quick-start) · [🎁 Offre gratuite](#-free-tier--how-much-you-get) · [🤖 Modèles](#-models--all-128-of-them) · [🧪 Utiliser l'API](#-how-to-use-the-api) · [✅ Vérifié](#-verified-working--every-key-is-tested) · [🧭 Comment ça marche](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Options](#️-cli-options) · [🛰️ Proxys](#️-behind-a-proxy) · [🐞 Problèmes](#-issues)
@@ -201,6 +202,17 @@ node src/connect-9router.js \
 
 Exécutez-le sans `--api-key` pour enregistrer **toutes** les clés de `keys.txt`. La réexécution est idempotente : le nœud est mis en correspondance par `--prefix moxin-plus`, chaque connexion par son nom (`moxin-plus-001`, `moxin-plus-002`, …). Valeurs par défaut : `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. Les modèles sont alors servis sous `moxin-plus/<model id>` — épinglez un id **simple**, pas un id `[次]` (voir le piège ci-dessus).
 
+## 🔌 Connexion à OmniRoute
+
+[OmniRoute](https://omniroute.online) est un routeur auto-hébergé compatible OpenAI. Moxin Plus sert un point de terminaison compatible OpenAI, alors enregistrez-le une fois et chaque clé devient une connexion sous un même nœud fournisseur :
+
+```bash
+node src/connect-omniroute.js \
+  --base http://localhost:20128 --password 123456 \
+  --api-key YOUR_KEY
+```
+
+Exécutez-le sans `--api-key` pour enregistrer **toutes** les clés de `keys.txt`. La réexécution est idempotente : le nœud est mis en correspondance par `--prefix moxin-plus`, chaque connexion par son nom (`moxin-plus-001`, `moxin-plus-002`, …). Valeurs par défaut : `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. Les modèles sont alors servis sous `moxin-plus/<model id>` — épinglez un id **simple**, pas un id `[次]` (voir le piège ci-dessus).
 ## 🔑 Ce qu'une clé vous apporte
 
 | | |
