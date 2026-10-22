@@ -207,7 +207,7 @@ Run it without `--api-key` to register **every** key in `keys.txt`. Re-running i
 | 🏢 Provider | **Moxin Plus (墨信AI)** — [www.moxin.plus](https://www.moxin.plus) |
 | 🎁 What the provider gives | **no sign-up bonus** — the daily check-in pays **≈$0.27–$0.99 per account per day** (median ≈ $0.72) |
 | 🔑 What one key gets you | the 128-id catalogue on `https://www.moxin.plus/v1`, funded by that account's check-in credit |
-| 📦 This repo | **10 keys, all chat-verified** on 2026-10-21/22 |
+| 📦 This repo | **keys verified** on 2026-10-21/22 |
 | 🌐 API shape | OpenAI-compatible: `POST https://www.moxin.plus/v1/chat/completions` |
 | 🛡️ Gates | **no captcha**, e-mail code only; sender-brand filter required on the shared mailboxes |
 | 🔒 Your data | only `www.moxin.plus` and the mailbox service are contacted; keys never leave your machine |
