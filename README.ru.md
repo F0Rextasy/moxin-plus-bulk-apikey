@@ -92,6 +92,7 @@ print(c.chat.completions.create(model="deepseek-v4.1-flash",
 ## 🛠 Быстрый старт
 
 ```bash
+
 # clone or fork this repository, then:
 cd moxin-plus-bulk-apikey
 
