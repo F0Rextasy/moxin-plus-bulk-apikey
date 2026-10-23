@@ -21,7 +21,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Hızlı başlangıç](#-quick-start) · [🎁 Ücretsiz katman](#-free-tier--how-much-you-get) · [🤖 Modeller](#-models--all-128-of-them) · [🧪 API'yi kullanma](#-how-to-use-the-api) · [✅ Doğrulandı](#-verified-working--every-key-is-tested) · [🧭 Nasıl çalışır](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Seçenekler](#️-cli-options) · [🛰️ Proxy'ler](#️-behind-a-proxy) · [🐞 Sorunlar](#-issues)
+[🛠 Hızlı başlangıç](#-quick-start) · [🎁 Ücretsiz katman](#-free-tier--how-much-you-get) · [🤖 Modeller](#-models--all-128-of-them) · [🧪 API'yi kullanma](#-how-to-use-the-api) · [✅ Doğrulandı](#-verified-working--every-key-is-tested) · [🧭 Nasıl çalışır](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Seçenekler](#️-cli-options) · [🛰️ Proxy'ler](#️-behind-a-proxy) · [🐞 Sorunlar](#-issues)
 
 </div>
 
@@ -102,6 +102,7 @@ printf 'socks5://127.0.0.1:1080\n' > proxies.txt   # optional — without it the
 
 # 2) go
 node src/launcher.js          # interactive: mint / verify / screen / settings / connect 9Router
+
 # or directly:
 node src/cli.js --count 10 --pool proxies.txt   # 10 accounts, one exit per account
 ```
@@ -213,6 +214,7 @@ node src/connect-omniroute.js \
 ```
 
 `--api-key` olmadan çalıştırın, `keys.txt` içindeki **her** anahtarı kaydetmek için. Yeniden çalıştırmak etkisizdir (idempotent): düğüm `--prefix moxin-plus` ile, her bağlantı adıyla (`moxin-plus-001`, `moxin-plus-002`, …) eşleştirilir. Varsayılanlar: `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. Modeller daha sonra `moxin-plus/<model id>` olarak sunulur — `[次]` olanı değil, **düz** bir id sabitleyin (yukarıdaki tuzağa bakın).
+
 ## 🔑 Bir anahtar size ne kazandırır
 
 | | |

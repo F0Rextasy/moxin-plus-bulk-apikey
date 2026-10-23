@@ -35,6 +35,9 @@ const HERE = __dirname;
 const BASE = (process.env.MOXIN_BASE || 'https://www.moxin.plus').replace(/\/$/, '');
 const KEYS = path.join(HERE, 'keys.txt');
 const ACCOUNTS = path.join(HERE, 'accounts.jsonl');
+const DEAD_FILE = path.join(HERE, 'keys-dead.txt');
+/** Dead keys from the last verify run (one `key<TAB># reason` per line). */
+const writeDead = (dead) => fs.writeFileSync(DEAD_FILE, dead.map((d) => `${d.key}\t# ${d.why}`).join('\n') + (dead.length ? '\n' : ''));
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36';
 const MAILBOX_API = 'https://www.emailnator.com';
 
@@ -151,7 +154,8 @@ async function reqOnce(method, url, { body, headers = {}, exit = null } = {}) {
         const head = idx === -1 ? t : t.slice(0, idx);
         const bodyText = idx === -1 ? '' : t.slice(idx + 4);
         const status = Number((/^HTTP\/1\.[01] (\d+)/.exec(head) || [])[1] || 0);
-        resolve({ status, text: bodyText });
+        const chunked = /transfer-encoding:\s*chunked/i.test(head);
+        resolve({ status, text: chunked ? dechunk(bodyText) : bodyText });
       });
       s.on('error', reject);
     };
@@ -160,6 +164,20 @@ async function reqOnce(method, url, { body, headers = {}, exit = null } = {}) {
   });
 }
 
+/** strip HTTP/1.1 chunked framing (one hex size line per chunk, terminated by a 0 chunk). */
+function dechunk(body) {
+  let out = '';
+  let i = 0;
+  while (i < body.length) {
+    const nl = body.indexOf('\r\n', i);
+    if (nl === -1) break;
+    const size = parseInt(body.slice(i, nl).trim(), 16);
+    if (!Number.isFinite(size) || size <= 0) break;
+    out += body.slice(nl + 2, nl + 2 + size);
+    i = nl + 2 + size + 2;
+  }
+  return out;
+}
 /** one dead exit must not kill a run: a failed attempt moves to the next pool exit (3 tries) */
 async function req(method, url, opts = {}) {
   const tries = pool.length ? 3 : 1;
@@ -436,15 +454,18 @@ async function verifyKeys() {
   const keys = fs.existsSync(KEYS) ? fs.readFileSync(KEYS, 'utf8').split(/\r?\n/).map((s) => s.trim()).filter(Boolean) : [];
   const report = [];
   let live = 0;
+  const dead = [];
   for (const key of keys) {
     const exit = nextExit();
     let s;
     try { s = await sanity2(key, exit); }
     catch (e) { s = { live: false, model: null, prompts: [{ prompt: 'ERR', status: 0, content: null, err: String(e.message).slice(0, 60) }] }; }
     if (s.live) live++;
+    else dead.push({ key, why: 'verify DEAD' });
     report.push({ key: String(key).slice(0, 12) + '…', live: s.live, model: s.model || null, prompts: s.prompts.map((x) => ({ prompt: x.prompt, status: x.status, out: String(x.content || x.err || '').slice(0, 40) })) });
     log(`verify ${key.slice(0, 12)}… ${s.live ? 'LIVE 2/2' : 'DEAD'} ${s.prompts.map((x) => `${x.prompt}=${x.status}:${String(x.content || x.err || '').slice(0, 20)}`).join(' | ')}`);
   }
+  writeDead(dead);
   fs.writeFileSync(path.join(HERE, 'verify-report.json'), JSON.stringify({ at: new Date().toISOString(), host: BASE, live, total: keys.length, report }, null, 1));
   log(`verify done: ${live}/${keys.length} live -> verify-report.json`);
 }
@@ -508,7 +529,7 @@ inboxes. Per-call trap: ids tagged [次]/[特价次卡] bill PER CALL (measured 
 [次]deepseek-v4.1-flash vs 150 for the plain id) - pin the plain id in routers and combos.`);
     return;
   }
-  const known = ['count', 'model', 'alt-models', 'timeout', 'code-wait', 'pool', 'router9', 'password', 'help', 'revive', 'verify', 'screen', 'connect-9router'];
+  const known = ['count', 'auto', 'model', 'alt-models', 'timeout', 'code-wait', 'pool', 'router9', 'password', 'help', 'revive', 'verify', 'screen', 'connect-9router'];
   const stray = argv.filter((a) => a.startsWith('--') && !known.includes(a.replace(/^--/, '').split('=')[0]));
   if (stray.length) { console.error(`unknown flag(s): ${stray.join(' ')} — run with --help`); process.exit(2); }
   if (has('screen')) return screenPool();

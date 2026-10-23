@@ -21,7 +21,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 快速开始](#-quick-start) · [🎁 免费额度](#-free-tier--how-much-you-get) · [🤖 模型](#-models--all-128-of-them) · [🧪 使用 API](#-how-to-use-the-api) · [✅ 已验证](#-verified-working--every-key-is-tested) · [🧭 工作原理](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ 选项](#️-cli-options) · [🛰️ 代理](#️-behind-a-proxy) · [🐞 问题反馈](#-issues)
+[🛠 快速开始](#-quick-start) · [🎁 免费额度](#-free-tier--how-much-you-get) · [🤖 模型](#-models--all-128-of-them) · [🧪 使用 API](#-how-to-use-the-api) · [✅ 已验证](#-verified-working--every-key-is-tested) · [🧭 工作原理](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ 选项](#️-cli-options) · [🛰️ 代理](#️-behind-a-proxy) · [🐞 问题反馈](#-issues)
 
 </div>
 
@@ -102,6 +102,7 @@ printf 'socks5://127.0.0.1:1080\n' > proxies.txt   # optional — without it the
 
 # 2) go
 node src/launcher.js          # interactive: mint / verify / screen / settings / connect 9Router
+
 # or directly:
 node src/cli.js --count 10 --pool proxies.txt   # 10 accounts, one exit per account
 ```
@@ -213,6 +214,7 @@ node src/connect-omniroute.js \
 ```
 
 不带 `--api-key` 运行它会注册 `keys.txt` 中的**每一个**密钥。重复运行是幂等的：节点通过 `--prefix moxin-plus` 匹配，每个连接通过名称匹配（`moxin-plus-001`、`moxin-plus-002`、…）。默认值：`--base http://localhost:20128`、`--password 123456`、`--name "Moxin Plus"`、`--prefix moxin-plus`、`--base-url https://www.moxin.plus/v1`、`--model deepseek-v4.1-flash`。模型随后以 `moxin-plus/<model id>` 的形式提供 — 请固定使用**不带前缀**的 id，而非 `[次]` 的 id（见上文陷阱）。
+
 ## 🔑 一个密钥能给你什么
 
 | | |

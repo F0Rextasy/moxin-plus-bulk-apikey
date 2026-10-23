@@ -21,7 +21,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 빠른 시작](#-quick-start) · [🎁 무료 티어](#-free-tier--how-much-you-get) · [🤖 모델](#-models--all-128-of-them) · [🧪 API 사용하기](#-how-to-use-the-api) · [✅ 검증됨](#-verified-working--every-key-is-tested) · [🧭 작동 방식](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ 옵션](#️-cli-options) · [🛰️ 프록시](#️-behind-a-proxy) · [🐞 이슈](#-issues)
+[🛠 빠른 시작](#-quick-start) · [🎁 무료 티어](#-free-tier--how-much-you-get) · [🤖 모델](#-models--all-128-of-them) · [🧪 API 사용하기](#-how-to-use-the-api) · [✅ 검증됨](#-verified-working--every-key-is-tested) · [🧭 작동 방식](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ 옵션](#️-cli-options) · [🛰️ 프록시](#️-behind-a-proxy) · [🐞 이슈](#-issues)
 
 </div>
 
@@ -102,6 +102,7 @@ printf 'socks5://127.0.0.1:1080\n' > proxies.txt   # optional — without it the
 
 # 2) go
 node src/launcher.js          # interactive: mint / verify / screen / settings / connect 9Router
+
 # or directly:
 node src/cli.js --count 10 --pool proxies.txt   # 10 accounts, one exit per account
 ```
@@ -213,6 +214,7 @@ node src/connect-omniroute.js \
 ```
 
 `--api-key` 없이 실행하면 `keys.txt`의 **모든** 키를 등록합니다. 재실행은 멱등적입니다: 노드는 `--prefix moxin-plus`로 매칭되고, 각 연결은 이름(`moxin-plus-001`, `moxin-plus-002`, …)으로 매칭됩니다. 기본값: `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. 이후 모델은 `moxin-plus/<model id>`로 제공됩니다 — `[次]` id가 아닌 **일반** id를 고정하세요(위의 함정 참조).
+
 ## 🔑 키 하나로 얻는 것
 
 | | |

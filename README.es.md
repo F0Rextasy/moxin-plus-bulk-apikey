@@ -21,7 +21,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Inicio rápido](#-quick-start) · [🎁 Nivel gratuito](#-free-tier--how-much-you-get) · [🤖 Modelos](#-models--all-128-of-them) · [🧪 Usar la API](#-how-to-use-the-api) · [✅ Verificado](#-verified-working--every-key-is-tested) · [🧭 Cómo funciona](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Opciones](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Problemas](#-issues)
+[🛠 Inicio rápido](#-quick-start) · [🎁 Nivel gratuito](#-free-tier--how-much-you-get) · [🤖 Modelos](#-models--all-128-of-them) · [🧪 Usar la API](#-how-to-use-the-api) · [✅ Verificado](#-verified-working--every-key-is-tested) · [🧭 Cómo funciona](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Opciones](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Problemas](#-issues)
 
 </div>
 
@@ -102,6 +102,7 @@ printf 'socks5://127.0.0.1:1080\n' > proxies.txt   # optional — without it the
 
 # 2) go
 node src/launcher.js          # interactive: mint / verify / screen / settings / connect 9Router
+
 # or directly:
 node src/cli.js --count 10 --pool proxies.txt   # 10 accounts, one exit per account
 ```
@@ -213,6 +214,7 @@ node src/connect-omniroute.js \
 ```
 
 Ejecútalo sin `--api-key` para registrar **todas** las claves en `keys.txt`. Volver a ejecutarlo es idempotente: el nodo se empareja por `--prefix moxin-plus`, cada conexión por nombre (`moxin-plus-001`, `moxin-plus-002`, …). Predeterminados: `--base http://localhost:20128`, `--password 123456`, `--name "Moxin Plus"`, `--prefix moxin-plus`, `--base-url https://www.moxin.plus/v1`, `--model deepseek-v4.1-flash`. Los modelos se sirven entonces como `moxin-plus/<model id>` — fija un id **simple**, no uno `[次]` (ver la trampa anterior).
+
 ## 🔑 Qué te da una clave
 
 | | |
